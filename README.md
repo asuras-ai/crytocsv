@@ -19,6 +19,17 @@ python app.py
 
 2. Open http://localhost:5000
 
+Authentication
+--------------
+The app requires a password stored in a `.env` file. Create a `.env` in the project root with:
+
+```
+APP_PASSWORD=yourpassword
+# optional: SECRET_KEY=some-secret-value
+```
+
+When running in Docker, you can mount the `.env` into the container or pass the environment variable via docker-compose.
+
 Run with Docker:
 
 ```powershell

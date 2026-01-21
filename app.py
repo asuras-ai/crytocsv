@@ -9,8 +9,27 @@ from datetime import datetime, timezone
 
 from flask import Flask, render_template, request, jsonify, send_file, abort
 import ccxt
+from functools import wraps
+from flask import session, redirect, url_for
+from dotenv import load_dotenv
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
+
+# load .env if present
+load_dotenv()
+
+APP_PASSWORD = os.environ.get('APP_PASSWORD')
+SECRET_KEY = os.environ.get('SECRET_KEY') or os.urandom(24)
+app.secret_key = SECRET_KEY
+
+
+def login_required(f):
+    @wraps(f)
+    def wrapper(*args, **kwargs):
+        if not session.get('authenticated'):
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return wrapper
 
 DOWNLOAD_DIR = os.path.join(os.path.dirname(__file__), 'downloads')
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
@@ -162,11 +181,13 @@ def fetch_ohlcv_job(job_id, symbol, timeframe, start_ms, end_ms):
 
 
 @app.route('/')
+@login_required
 def index():
     return render_template('index.html')
 
 
 @app.route('/start_download', methods=['POST'])
+@login_required
 def start_download():
     data = request.json or {}
     symbol = data.get('symbol')
@@ -196,6 +217,7 @@ def start_download():
 
 
 @app.route('/progress/<job_id>')
+@login_required
 def progress(job_id):
     job = JOBS.get(job_id)
     if not job:
@@ -204,6 +226,7 @@ def progress(job_id):
 
 
 @app.route('/download/<job_id>')
+@login_required
 def download(job_id):
     job = JOBS.get(job_id)
     if not job:
@@ -214,6 +237,28 @@ def download(job_id):
     if not os.path.exists(filepath):
         return jsonify({'error': 'file missing'}), 404
     return send_file(filepath, as_attachment=True, download_name=job['filename'], mimetype='text/csv')
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        if not APP_PASSWORD:
+            error = 'Server login is not configured. Set APP_PASSWORD in .env.'
+        else:
+            pw = request.form.get('password', '')
+            if pw == APP_PASSWORD:
+                session['authenticated'] = True
+                return redirect(url_for('index'))
+            else:
+                error = 'Invalid password'
+    return render_template('login.html', error=error)
+
+
+@app.route('/logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
 
 
 if __name__ == '__main__':

@@ -13,6 +13,13 @@
       <div class="container-fluid">
         <a class="navbar-brand" href="#">Crypto CSV</a>
         <div class="d-none d-md-block navbar-text">OHLCV downloader powered by ccxt</div>
+        <div class="ms-auto">
+          {% if session.authenticated %}
+            <a class="btn btn-outline-light btn-sm" href="/logout">Logout</a>
+          {% else %}
+            <a class="btn btn-outline-light btn-sm" href="/login">Login</a>
+          {% endif %}
+        </div>
       </div>
     </nav>
 
