@@ -18,16 +18,29 @@ os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 JOBS = {}
 
 
-def ms_from_iso(dt_str):
-    # Expecting HTML datetime-local value like '2026-01-21T15:30'
+def ms_from_iso(dt_str, end=False):
+    """
+    Convert an ISO date or datetime string to milliseconds since epoch (UTC).
+    If a date-only string (YYYY-MM-DD) is provided, treat start as 00:00:00 and
+    end as 23:59:59.999 on that date (UTC).
+    """
     if not dt_str:
         return None
-    # Python 3.7+ supports fromisoformat for this format
-    dt = datetime.fromisoformat(dt_str)
-    # treat as local time -> convert to UTC timestamp
-    # Assume user-provided times are local; convert to UTC
-    if dt.tzinfo is None:
-        dt = dt.replace(tzinfo=timezone.utc)
+
+    # date-only like '2026-01-21' (no 'T' and no time component)
+    if 'T' not in dt_str and ':' not in dt_str and len(dt_str) == 10:
+        d = datetime.fromisoformat(dt_str).date()
+        if end:
+            dt = datetime(d.year, d.month, d.day, 23, 59, 59, 999000, tzinfo=timezone.utc)
+        else:
+            dt = datetime(d.year, d.month, d.day, 0, 0, 0, 0, tzinfo=timezone.utc)
+    else:
+        # Parse full datetime (may be 'YYYY-MM-DDTHH:MM' from datetime-local)
+        dt = datetime.fromisoformat(dt_str)
+        # If no timezone info provided, treat as UTC
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+
     return int(dt.timestamp() * 1000)
 
 
@@ -156,8 +169,8 @@ def start_download():
         return jsonify({'error': 'Missing required parameters'}), 400
 
     try:
-        start_ms = ms_from_iso(start)
-        end_ms = ms_from_iso(end)
+        start_ms = ms_from_iso(start, end=False)
+        end_ms = ms_from_iso(end, end=True)
     except Exception:
         return jsonify({'error': 'Invalid date format'}), 400
 
