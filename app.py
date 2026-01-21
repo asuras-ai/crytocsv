@@ -142,8 +142,9 @@ def fetch_ohlcv_job(job_id, symbol, timeframe, start_ms, end_ms):
             writer.writerow(['timestamp', 'open', 'high', 'low', 'close', 'volume'])
             for r in all_rows:
                 ts = int(r[0])
-                t_iso = datetime.utcfromtimestamp(ts / 1000).isoformat() + 'Z'
-                writer.writerow([t_iso, r[1], r[2], r[3], r[4], r[5]])
+                # format as 'YYYY-MM-DD HH:MM:SS' in UTC
+                t_str = datetime.utcfromtimestamp(ts / 1000).strftime('%Y-%m-%d %H:%M:%S')
+                writer.writerow([t_str, r[1], r[2], r[3], r[4], r[5]])
 
         JOBS[job_id]['status'] = 'done'
         JOBS[job_id]['filename'] = filename
