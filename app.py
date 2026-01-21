@@ -1,5 +1,6 @@
 import os
 import io
+import re
 import uuid
 import threading
 import time
@@ -134,8 +135,15 @@ def fetch_ohlcv_job(job_id, symbol, timeframe, start_ms, end_ms):
         # Final progress
         JOBS[job_id]['progress'] = 100
 
-        # Write CSV to file
-        filename = f"{job_id}.csv"
+        # Build a readable filename: SYMBOL-TF-YYMMDD-YYMMDD.csv
+        def normalize_symbol(s):
+            # remove non-alphanumeric characters and uppercase
+            return re.sub(r'[^A-Za-z0-9]', '', s).upper()
+
+        start_date_str = datetime.utcfromtimestamp(start_ms / 1000).strftime('%y%m%d')
+        end_date_str = datetime.utcfromtimestamp(end_ms / 1000).strftime('%y%m%d')
+        symbol_safe = normalize_symbol(chosen_symbol)
+        filename = f"{symbol_safe}-{timeframe}-{start_date_str}-{end_date_str}.csv"
         filepath = os.path.join(DOWNLOAD_DIR, filename)
         with open(filepath, 'w', newline='', encoding='utf-8') as f:
             writer = csv.writer(f)
