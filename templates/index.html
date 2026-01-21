@@ -4,47 +4,90 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Crypto OHLCV CSV Downloader</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-" crossorigin="anonymous">
     <link rel="stylesheet" href="/static/style.css" />
   </head>
-  <body>
-    <div class="container">
-      <h1>Crypto OHLCV CSV Downloader</h1>
-
-      <label>Symbol
-        <input id="symbol" placeholder="e.g. BTC/USDT or BTC" />
-      </label>
-
-      <label>Timeframe
-        <select id="timeframe">
-          <option>1m</option>
-          <option>5m</option>
-          <option>15m</option>
-          <option>30m</option>
-          <option>1h</option>
-          <option>4h</option>
-          <option>1d</option>
-        </select>
-      </label>
-
-      <label>Start
-        <input id="start" type="datetime-local" />
-      </label>
-
-      <label>End
-        <input id="end" type="datetime-local" />
-      </label>
-
-      <button id="downloadBtn">Download CSV</button>
-
-      <div id="progressArea" class="hidden">
-        <div class="progress">
-          <div id="progressBar" class="progress-bar" style="width:0%"></div>
-        </div>
-        <div id="progressText"></div>
-        <a id="downloadLink" href="#" class="hidden">Download file</a>
+  <body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Crypto CSV</a>
+        <div class="d-none d-md-block navbar-text">OHLCV downloader powered by ccxt</div>
       </div>
-    </div>
+    </nav>
 
+    <main class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+          <div class="card shadow-sm">
+            <div class="card-body">
+              <h2 class="card-title mb-3">Download OHLCV as CSV</h2>
+
+              <form id="downloadForm" class="row g-3">
+                <div class="col-12 col-md-6">
+                  <label for="symbol" class="form-label">Symbol</label>
+                  <input id="symbol" class="form-control" placeholder="e.g. BTC/USDT or BTC" />
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <label for="timeframe" class="form-label">Timeframe</label>
+                  <select id="timeframe" class="form-select">
+                    <option>1m</option>
+                    <option>5m</option>
+                    <option>15m</option>
+                    <option>30m</option>
+                    <option>1h</option>
+                    <option>4h</option>
+                    <option>1d</option>
+                  </select>
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <label for="start" class="form-label">Start</label>
+                  <input id="start" type="datetime-local" class="form-control" />
+                </div>
+
+                <div class="col-12 col-md-6">
+                  <label for="end" class="form-label">End</label>
+                  <input id="end" type="datetime-local" class="form-control" />
+                </div>
+
+                <div class="col-12 d-flex gap-2">
+                  <button id="downloadBtn" class="btn btn-primary">Download CSV</button>
+                  <button id="clearBtn" type="button" class="btn btn-outline-secondary">Clear</button>
+                </div>
+              </form>
+
+              <div id="progressArea" class="mt-4 d-none">
+                <div class="d-flex align-items-center mb-2">
+                  <div id="spinner" class="spinner-border text-primary me-3" role="status"><span class="visually-hidden">Loading...</span></div>
+                  <div>
+                    <div id="progressText" class="fw-medium">Starting...</div>
+                    <div id="jobIdText" class="text-muted small"></div>
+                  </div>
+                </div>
+
+                <div class="progress" style="height:18px">
+                  <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width:0%"></div>
+                </div>
+
+                <div class="mt-3">
+                  <a id="downloadLink" class="btn btn-success d-none" href="#">Download CSV</a>
+                  <button id="cancelBtn" type="button" class="btn btn-outline-danger d-none">Cancel</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-footer text-muted small">Generated CSV uses UTC timestamps in ISO format.</div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="text-center py-3 small text-muted">&copy; {year} Crypto CSV Downloader</footer>
+
+    <script>document.querySelector('footer').innerHTML = '&copy; ' + new Date().getFullYear() + ' Crypto CSV Downloader'</script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="" crossorigin="anonymous"></script>
     <script src="/static/app.js"></script>
   </body>
 </html>

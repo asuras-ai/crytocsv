@@ -1,8 +1,19 @@
-body { font-family: Arial, sans-serif; background:#f5f7fa; color:#222 }
-.container { max-width:720px; margin:40px auto; background:#fff; padding:20px; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.06) }
-label { display:block; margin:12px 0 }
-input, select { padding:8px 10px; font-size:14px; margin-left:8px }
-button { margin-top:12px; padding:10px 16px; font-size:15px }
-.progress { height:18px; background:#e6eef8; border-radius:6px; overflow:hidden; margin-top:12px }
-.progress-bar { height:100%; background:#2b8cff; width:0 }
-.hidden { display:none }
+/* Base adjustments */
+body { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background: #f3f6fb; color: #1f2937 }
+
+/* Card tweak */
+.card { border: none; border-radius: 12px }
+.card .card-body { padding: 1.5rem }
+
+/* Form spacing */
+.form-label { font-weight: 600 }
+
+/* Progress area */
+#progressText { font-weight: 600 }
+
+/* Buttons */
+.btn-primary { background: linear-gradient(180deg, #2563eb, #1e40af); border: none }
+.btn-primary:hover { filter: brightness(0.95) }
+
+footer { color: #6b7280 }
+
