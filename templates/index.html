@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Crypto OHLCV CSV Downloader</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Crypto OHLCV CSV Downloader</h1>
+
+      <label>Symbol
+        <input id="symbol" placeholder="e.g. BTC/USDT or BTC" />
+      </label>
+
+      <label>Timeframe
+        <select id="timeframe">
+          <option>1m</option>
+          <option>5m</option>
+          <option>15m</option>
+          <option>30m</option>
+          <option>1h</option>
+          <option>4h</option>
+          <option>1d</option>
+        </select>
+      </label>
+
+      <label>Start
+        <input id="start" type="datetime-local" />
+      </label>
+
+      <label>End
+        <input id="end" type="datetime-local" />
+      </label>
+
+      <button id="downloadBtn">Download CSV</button>
+
+      <div id="progressArea" class="hidden">
+        <div class="progress">
+          <div id="progressBar" class="progress-bar" style="width:0%"></div>
+        </div>
+        <div id="progressText"></div>
+        <a id="downloadLink" href="#" class="hidden">Download file</a>
+      </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
