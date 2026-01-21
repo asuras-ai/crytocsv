@@ -1,0 +1,26 @@
+# Ignore generated CSVs in downloads but allow keeping the folder with a .gitkeep
+/downloads/*
+!/downloads/.gitkeep
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtualenv
+.venv/
+venv/
+env/
+
+# Environment files
+.env
+
+# OS
+.DS_Store
+
+# Logs
+*.log
